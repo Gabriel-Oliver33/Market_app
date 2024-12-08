@@ -25,20 +25,20 @@ export default function NewClientScreen() {
       <View style={styles.inputArea}>
         <TextInput
             style={styles.input}
-            placeholder="Maria da Silva"
+            placeholder="Nome"
             value={nome}
             onChangeText={setNome}
         />
         <TextInput
             style={styles.input}
-            placeholder="example@example.com"
+            placeholder="Email"
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
         />
         <TextInput
             style={styles.input}
-            placeholder="10/10/1990"
+            placeholder="Data"
             value={dataNascimento}
             onChangeText={setDataNascimento}
         />
