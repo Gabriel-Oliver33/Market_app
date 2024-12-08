@@ -1,25 +1,13 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'; // Import do tipo necessário
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
-import { RootStackParamList } from '../../../navigation/routesParams'; // Import correto do tipo de rotas
-
-interface Cliente {
-  id: string;
-  nome: string;
-  email: string;
-  dataNascimento: string;
-}
-
-const clientes: Cliente[] = [
-  { id: '1', nome: 'Maria da Silva', email: 'email@email.com', dataNascimento: '14/12/1987' },
-  { id: '2', nome: 'João Oliveira', email: 'joao@email.com', dataNascimento: '22/03/1990' },
-  { id: '3', nome: 'Ana Costa', email: 'ana@email.com', dataNascimento: '01/07/1985' },
-];
+import { RootStackParamList } from '../../../navigation/routesParams';
+import { clientes, Cliente } from '../../../mock/clients'; // Importando os dados
 
 export default function ClientScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(); // Adicione o tipo aqui
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const renderCliente = ({ item }: { item: Cliente }) => (
     <View style={styles.card}>
@@ -50,14 +38,16 @@ export default function ClientScreen() {
       />
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('NewClientScreen')} // Agora funciona
+        onPress={() => navigation.navigate('NewClientScreen')}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
       <View style={styles.bottomNav}>
         <Text style={styles.navItem}>Clientes</Text>
         <Text style={styles.navItem}>Compras</Text>
-        <Text style={styles.navItem}>Produtos</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('ProductsScreen')}>
+          <Text style={styles.navItem}>Produtos</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

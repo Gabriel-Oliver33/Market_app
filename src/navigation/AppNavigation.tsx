@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import ClientScreen from '../components/screens/ClientScreen';
 import NewClientScreen from '../components/screens/NewClientScreen';
+import ProductsScreen from '../components/screens/ProductsScreen'
+import NewProductScreen from '../components/screens/NewProductScreen'
 import { RootStackParamList } from './routesParams';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -21,6 +23,15 @@ export default function AppNavigation() {
           name="NewClientScreen"
           component={NewClientScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+        name="ProductsScreen"
+        component={ProductsScreen}
+        options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+        name="NewProductScreen" 
+        component={NewProductScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
