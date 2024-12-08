@@ -1,6 +1,9 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'; // Import do tipo necessário
 import styles from './styles';
+import { RootStackParamList } from '../../../navigation/routesParams'; // Import correto do tipo de rotas
 
 interface Cliente {
   id: string;
@@ -15,7 +18,9 @@ const clientes: Cliente[] = [
   { id: '3', nome: 'Ana Costa', email: 'ana@email.com', dataNascimento: '01/07/1985' },
 ];
 
-export default function ListaClientes() {
+export default function ClientScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>(); // Adicione o tipo aqui
+
   const renderCliente = ({ item }: { item: Cliente }) => (
     <View style={styles.card}>
       <View style={styles.info}>
@@ -43,7 +48,10 @@ export default function ListaClientes() {
         renderItem={renderCliente}
         contentContainerStyle={styles.list}
       />
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => navigation.navigate('NewClientScreen')} // Agora funciona
+      >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
       <View style={styles.bottomNav}>

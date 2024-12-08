@@ -1,9 +1,6 @@
 import React from 'react';
-import ClientScreen from './src/components/screens/ClientScreen'
+import AppNavigation from './src/navigation/AppNavigation'; // Importação do AppNavigation
 
 export default function App() {
-  return (
-    <ClientScreen></ClientScreen>
-  );
+  return <AppNavigation />; // Renderiza o sistema de navegação
 }
-
