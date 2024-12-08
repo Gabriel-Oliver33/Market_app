@@ -22,26 +22,27 @@ export default function NewClientScreen() {
         <Text style={styles.backButtonText}>&larr;</Text>
       </TouchableOpacity>
       <Text style={styles.header}>Novo cliente</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Maria da Silva"
-        value={nome}
-        onChangeText={setNome}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="example@example.com"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="10/10/1990"
-        value={dataNascimento}
-        onChangeText={setDataNascimento}
-      />
+      <View style={styles.inputArea}>
+        <TextInput
+            style={styles.input}
+            placeholder="Maria da Silva"
+            value={nome}
+            onChangeText={setNome}
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="example@example.com"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="10/10/1990"
+            value={dataNascimento}
+            onChangeText={setDataNascimento}
+        />
+      </View>
 
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.saveButton} onPress={salvarCliente}>

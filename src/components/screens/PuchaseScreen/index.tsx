@@ -3,25 +3,26 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
+import { buy, Purchase } from '../../../mock/puchase';
 import { RootStackParamList } from '../../../navigation/routesParams';
-import { clientes, Cliente } from '../../../mock/clients'; // Importando os dados
 
-export default function ClientScreen() {
+export default function PuchaseScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const renderCliente = ({ item }: { item: Cliente }) => (
+  const renderPurchase = ({ item }: { item: Purchase }) => (
     <View style={styles.card}>
       <View style={styles.info}>
-        <Text style={styles.name}>{item.nome}</Text>
-        <Text style={styles.email}>{item.email}</Text>
-        <Text style={styles.birthdate}>{item.dataNascimento}</Text>
+        <Text style={styles.productName}>Produto: {item.productName}</Text>
+        <Text style={styles.quantity}>Quantidade: {item.quantity}</Text>
+        <Text style={styles.totalPrice}>Total: R$ {item.totalPrice.toFixed(2)}</Text>
+        <Text style={styles.date}>Data: {item.date}</Text>
       </View>
       <View style={styles.actions}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
-          <Text style={styles.buttonText}>Inativar</Text>
+          <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -29,17 +30,16 @@ export default function ClientScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Lista de clientes</Text>
+      <Text style={styles.header}>Lista de Compras</Text>
       <FlatList
-        data={clientes}
+        data={buy}
         keyExtractor={(item) => item.id}
-        renderItem={renderCliente}
+        renderItem={renderPurchase}
         contentContainerStyle={styles.list}
       />
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('NewClientScreen')}
-      >
+        onPress={() => console.log('Adicionar Compra')}>
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
       <View style={styles.bottomNav}>
@@ -47,7 +47,7 @@ export default function ClientScreen() {
           <Text style={styles.navItem}>Clientes</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('PuchaseScreen')}>
-        <Text style={styles.navItem}>Compras</Text>
+          <Text style={styles.navItem}>Compras</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ProductsScreen')}>
           <Text style={styles.navItem}>Produtos</Text>

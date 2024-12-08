@@ -48,7 +48,9 @@ export default function ProductsScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('ClientScreen')}>
           <Text style={styles.navItem}>Clientes</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PuchaseScreen')}>
         <Text style={styles.navItem}>Compras</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ProductsScreen')}>
           <Text style={styles.navItem}>Produtos</Text>
         </TouchableOpacity>

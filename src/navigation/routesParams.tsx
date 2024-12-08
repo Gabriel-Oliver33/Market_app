@@ -3,5 +3,6 @@ export type RootStackParamList = {
     NewClientScreen: undefined;
     ProductsScreen: undefined;
     NewProductScreen: undefined;
+    PuchaseScreen: undefined;
   };
   

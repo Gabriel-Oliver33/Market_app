@@ -29,7 +29,7 @@ export default StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
+    marginTop: 400,
   },
   saveButton: {
     flex: 1,
@@ -52,4 +52,7 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  inputArea: {
+    marginTop: 100
+  }
 });

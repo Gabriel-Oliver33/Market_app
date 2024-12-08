@@ -23,34 +23,34 @@ export default function NewProductScreen() {
         <Text style={styles.backButtonText}>&larr;</Text>
       </TouchableOpacity>
       <Text style={styles.header}>Novo Produto</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Nome do Produto"
-        value={nome}
-        onChangeText={setNome}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Marca"
-        value={marca}
-        onChangeText={setMarca}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Preço"
-        value={preco}
-        onChangeText={setPreco}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Quantidade"
-        value={quantidade}
-        onChangeText={setQuantidade}
-        keyboardType="numeric"
-      />
-
+      <View style={styles.inputArea}>
+        <TextInput
+            style={styles.input}
+            placeholder="Nome do Produto"
+            value={nome}
+            onChangeText={setNome}
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="Marca"
+            value={marca}
+            onChangeText={setMarca}
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="Preço"
+            value={preco}
+            onChangeText={setPreco}
+            keyboardType="numeric"
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="Quantidade"
+            value={quantidade}
+            onChangeText={setQuantidade}
+            keyboardType="numeric"
+        />
+      </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.saveButton} onPress={salvarProduto}>
           <Text style={styles.buttonText}>Salvar</Text>
