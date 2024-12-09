@@ -16,6 +16,7 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    marginTop: 40,
   },
   input: {
     height: 50,

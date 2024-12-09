@@ -19,9 +19,6 @@ export default function NewProductScreen() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>&larr;</Text>
-      </TouchableOpacity>
       <Text style={styles.header}>Novo Produto</Text>
       <View style={styles.inputArea}>
         <TextInput

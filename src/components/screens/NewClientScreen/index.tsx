@@ -18,9 +18,6 @@ export default function NewClientScreen() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>&larr;</Text>
-      </TouchableOpacity>
       <Text style={styles.header}>Novo cliente</Text>
       <View style={styles.inputArea}>
         <TextInput
