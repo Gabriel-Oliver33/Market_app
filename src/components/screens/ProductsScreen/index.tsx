@@ -19,9 +19,11 @@ export default function ProductsScreen() {
         <Text style={styles.status}>Status: {item.status}</Text>
       </View>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Editar</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('EditProductsModal', { product: item })}>
+        <Text style={styles.buttonText}>Editar</Text>
+      </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
           <Text style={styles.buttonText}>Inativar</Text>
         </TouchableOpacity>

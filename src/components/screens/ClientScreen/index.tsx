@@ -17,7 +17,9 @@ export default function ClientScreen() {
         <Text style={styles.birthdate}>{item.dataNascimento}</Text>
       </View>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('EditClientModal', { id: item.id })}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.inactivateButton]}>

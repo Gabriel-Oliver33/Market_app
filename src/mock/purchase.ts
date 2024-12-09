@@ -6,7 +6,7 @@ export interface Purchase {
     date: string; // Formato de data: "dd/mm/yyyy"
   }
   
-  export const buy: Purchase[] = [
+  export const purchase: Purchase[] = [
     {
       id: '1',
       productName: 'Arroz 5kg',

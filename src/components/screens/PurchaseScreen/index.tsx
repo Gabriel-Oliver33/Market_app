@@ -3,10 +3,10 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
-import { buy, Purchase } from '../../../mock/puchase';
+import { purchase, Purchase } from '../../../mock/purchase';
 import { RootStackParamList } from '../../../navigation/routesParams';
 
-export default function PuchaseScreen() {
+export default function PurchaseScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const renderPurchase = ({ item }: { item: Purchase }) => (
@@ -18,7 +18,9 @@ export default function PuchaseScreen() {
         <Text style={styles.date}>Data: {item.date}</Text>
       </View>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('EditPurchaseModal', { purchase: item })}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
@@ -32,7 +34,7 @@ export default function PuchaseScreen() {
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Compras</Text>
       <FlatList
-        data={buy}
+        data={purchase}
         keyExtractor={(item) => item.id}
         renderItem={renderPurchase}
         contentContainerStyle={styles.list}
