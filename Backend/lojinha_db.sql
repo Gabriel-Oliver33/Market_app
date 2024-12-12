@@ -45,9 +45,11 @@ INSERT INTO clientes (nome, email) VALUES ('FlaviaFessoraGenteBoa', 'Flaviafesso
 UPDATE clientes SET idade = 22 WHERE id = 1; 
 UPDATE clientes SET idade = 26 WHERE id = 2; 
 
+-- Inserindo dados na tabela 'produtos'
+INSERT INTO produtos (nome, preco) VALUES ('Mucilon', 15.99);
+
 -- Inserindo dados na tabela 'compras'
 INSERT INTO compras (id_cliente, total) VALUES (1, 23.99);
-
 
 -- Inserindo dados na tabela 'itens_compras'
 INSERT INTO itens_compras (id_compra, id_produto, quantidade, preco_unitario) 
@@ -56,8 +58,6 @@ VALUES (LAST_INSERT_ID(), 1, 2, 15.99);
 
 -- Atualizando dados das compras
 
--- Inserindo dados na tabela 'produtos'
-INSERT INTO produtos (nome, preco) VALUES ('Mucilon', 15.99);
 
 -- Atualizando dados dos produtos
 UPDATE produtos SET preco = 9.99 WHERE nome = 'Mucilon';

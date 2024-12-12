@@ -7,7 +7,7 @@ export type RootStackParamList = {
     ProductsScreen: undefined;
     NewProductScreen: undefined;
     PuchaseScreen: undefined;
-    EditClientModal: { id: string }; // Parâmetro: ID do cliente
+    EditClientModal: { id: number }; // Parâmetro: ID do cliente
     EditProductsModal: { product: Product }; // Produto passado como parâmetro
     EditPurchaseModal: { purchase: Purchase };  // Purchase passado como parâmetro
   };
