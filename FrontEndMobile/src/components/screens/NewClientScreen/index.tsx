@@ -22,6 +22,11 @@ export default function NewClientScreen() {
       Alert.alert('Erro', 'A idade deve ser um número.');
       return;
     }
+    
+    if (Number(idade) < 18) {
+      Alert.alert('Erro', 'Você precisa ter 18 anos ou mais.');
+      return;
+    }
 
     try {
       const novoCliente = {
