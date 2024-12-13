@@ -47,7 +47,7 @@ export default function ClientScreen() {
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
-          <Text style={styles.buttonText}>Inativar</Text>
+          <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
