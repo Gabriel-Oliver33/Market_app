@@ -1,29 +1,99 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../navigation/routesParams';
-import { clientes, Cliente } from '../../../mock/clients';
+import { updateCliente, getClientes } from '../../../api/api';
 import styles from './styles';
 
-export default function EditClientScreen() {
+type EditClientModalRouteProp = RouteProp<RootStackParamList, 'EditClientModal'>;
+
+interface Cliente {
+  id: number;
+  nome: string;
+  email: string;
+  idade: number;
+}
+
+export default function EditClientModal() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute();
-  const { id } = route.params as { id: string }; // Obtém o ID do cliente
-  const cliente = clientes.find((c) => c.id === id) as Cliente; // Busca o cliente pelo ID
+  const route = useRoute<EditClientModalRouteProp>();
+  const { id } = route.params; // ID do cliente a ser editado
 
-  const [nome, setNome] = useState(cliente.nome);
-  const [email, setEmail] = useState(cliente.email);
-  const [dataNascimento, setDataNascimento] = useState(cliente.dataNascimento);
+  const [nome, setNome] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [idade, setIdade] = useState<string>(''); // Como string para trabalhar com o TextInput
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSave = () => {
-    // Atualize o cliente no mock (ou API se estiver integrada)
-    const index = clientes.findIndex((c) => c.id === id);
-    if (index !== -1) {
-      clientes[index] = { ...clientes[index], nome, email, dataNascimento };
+  useEffect(() => {
+    const fetchClient = async () => {
+      try {
+        const clients: Cliente[] = await getClientes();
+        const client = clients.find((c: Cliente) => c.id === id);
+        if (client) {
+          setNome(client.nome);
+          setEmail(client.email);
+          setIdade(client.idade.toString());
+        } else {
+          setError('Cliente não encontrado');
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Erro ao carregar os dados do cliente');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClient();
+  }, [id]);
+
+  const handleSave = async () => {
+    if (!nome || !email || !idade) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      return;
     }
-    navigation.goBack(); // Fecha o modal
+
+    const parsedIdade = parseInt(idade, 10);
+    if (isNaN(parsedIdade) || parsedIdade <= 0) {
+      Alert.alert('Erro', 'Por favor, insira uma idade válida');
+      return;
+    }
+
+    if (Number(idade) < 18) {
+      Alert.alert('Erro', 'Você precisa ter 18 anos ou mais.');
+      return;
+    }
+    
+    try {
+      const updatedClient = { nome, email, idade: parsedIdade };
+      console.log('Dados enviados para o backend:', updatedClient);
+
+      await updateCliente(id, updatedClient);
+      Alert.alert('Sucesso', 'Cliente atualizado com sucesso!');
+      navigation.goBack();
+    } catch (error) {
+      console.error('Erro ao atualizar cliente:', error);
+      Alert.alert('Erro', 'Não foi possível atualizar o cliente');
+    }
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Carregando...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -39,12 +109,14 @@ export default function EditClientScreen() {
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
+        keyboardType="email-address"
       />
       <TextInput
         style={styles.input}
-        value={dataNascimento}
-        onChangeText={setDataNascimento}
-        placeholder="Data de Nascimento"
+        value={idade}
+        onChangeText={setIdade}
+        placeholder="Idade"
+        keyboardType="numeric"
       />
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Salvar</Text>

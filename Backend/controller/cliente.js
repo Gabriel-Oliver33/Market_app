@@ -3,8 +3,11 @@ const moment = require('moment');
 const pool = require('../database');
 
 // Validação de email único
-const emailExists = async (email) => {
-    const [rows] = await pool.query('SELECT * FROM clientes WHERE email = ?', [email]);
+const emailExists = async (email, id = null) => {
+    const query = id
+        ? 'SELECT * FROM clientes WHERE email = ? AND id != ?'
+        : 'SELECT * FROM clientes WHERE email = ?';
+    const [rows] = await pool.query(query, id ? [email, id] : [email]);
     return rows.length > 0;
 };
 
@@ -36,7 +39,7 @@ exports.updateCliente = async (req, res) => {
     const clienteId = req.params.id;
 
     // Validação de email único (excluindo o próprio cliente)
-    if (await emailExists(email)) {
+    if (await emailExists(email, clienteId)) {
         return res.status(400).json({ message: 'Email já registrado' });
     }
 
@@ -55,6 +58,7 @@ exports.updateCliente = async (req, res) => {
         res.status(500).json({ message: "Erro ao atualizar cliente", error });
     }
 };
+
 
 // Excluir Cliente
 exports.deleteCliente = async (req, res) => {

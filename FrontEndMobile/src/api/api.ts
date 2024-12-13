@@ -33,7 +33,7 @@ export const createCliente = async (data: { nome: string; email: string; idade: 
   }
 };
 
-export const updateCliente = async (id: number, data: { name: string; email: string; age: number }) => {
+export const updateCliente = async (id: number, data: { nome: string; email: string; idade: number }) => {
   try {
     const response = await api.put(`/clientes/${id}`, data);
     return response.data;
