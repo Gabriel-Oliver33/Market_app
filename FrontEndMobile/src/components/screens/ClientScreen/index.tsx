@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 import { RootStackParamList } from '../../../navigation/routesParams';
-import { getClientes } from '../../../api/api';
+import { getClientes, deleteCliente } from '../../../api/api';
 
 interface Cliente {
   id: number;
@@ -33,6 +33,28 @@ export default function ClientScreen() {
     fetchClientes();
   }, []);
 
+  const excluirCliente = async (id: number) => {
+    try {
+      await deleteCliente(id); // Chamando a API para deletar o cliente
+      setClientes((prevClientes) => prevClientes?.filter((cliente) => cliente.id !== id) || null); // Atualizando a lista local
+      Alert.alert('Sucesso', 'Cliente excluído com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir cliente:', error);
+      Alert.alert('Erro', 'Não foi possível excluir o cliente.');
+    }
+  };
+
+  const confirmarExclusao = (id: number) => {
+    Alert.alert(
+      'Confirmação',
+      'Tem certeza que deseja excluir este cliente?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', style: 'destructive', onPress: () => excluirCliente(id) },
+      ]
+    );
+  };
+
   const renderCliente = ({ item }: { item: Cliente }) => (
     <View style={styles.card}>
       <View style={styles.info}>
@@ -43,10 +65,14 @@ export default function ClientScreen() {
       <View style={styles.actions}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('EditClientModal', { id: item.id })}>
+          onPress={() => navigation.navigate('EditClientModal', { id: item.id })}
+        >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
+        <TouchableOpacity
+          style={[styles.button, styles.inactivateButton]}
+          onPress={() => confirmarExclusao(item.id)}
+        >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
