@@ -9,6 +9,6 @@ export type RootStackParamList = {
     PuchaseScreen: undefined;
     EditClientModal: { id: number }; // Parâmetro: ID do cliente
     EditProductsModal: { id: number }; // Parâmetro: ID do produto
-    EditPurchaseModal: { purchase: Purchase };  // Purchase passado como parâmetro
+    EditPurchaseModal: { id: number };  // Parâmetro: ID da compra
   };
   

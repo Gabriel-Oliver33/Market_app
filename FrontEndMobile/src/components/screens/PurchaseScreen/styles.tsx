@@ -96,4 +96,10 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#666',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginVertical: 8,
+  },
 });

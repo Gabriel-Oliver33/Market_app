@@ -1,26 +1,50 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
-import { purchase, Purchase } from '../../../mock/purchase';
 import { RootStackParamList } from '../../../navigation/routesParams';
+import { getCompras } from '../../../api/api';
+
+interface Purchase {
+  id: number;
+  id_cliente: number;
+  data_compra: string;
+  total: string;  // DECIMAL como string
+}
 
 export default function PurchaseScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [purchases, setPurchases] = useState<Purchase[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPurchases = async () => {
+      try {
+        const data = await getCompras();
+        setPurchases(data);
+      } catch (err: any) {
+        setError(err.message || 'Erro ao carregar compras');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPurchases();
+  }, []);
 
   const renderPurchase = ({ item }: { item: Purchase }) => (
     <View style={styles.card}>
       <View style={styles.info}>
-        <Text style={styles.productName}>Produto: {item.productName}</Text>
-        <Text style={styles.quantity}>Quantidade: {item.quantity}</Text>
-        <Text style={styles.totalPrice}>Total: R$ {item.totalPrice.toFixed(2)}</Text>
-        <Text style={styles.date}>Data: {item.date}</Text>
+        <Text style={styles.productName}>Cliente ID: {item.id_cliente}</Text>
+        <Text style={styles.date}>Data: {item.data_compra}</Text>
+        <Text style={styles.totalPrice}>Total: R$ {parseFloat(item.total).toFixed(2)}</Text>
       </View>
       <View style={styles.actions}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('EditPurchaseModal', { purchase: item })}>
+          onPress={() => navigation.navigate('EditPurchaseModal', { id: item.id })}>
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
@@ -30,12 +54,28 @@ export default function PurchaseScreen() {
     </View>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Lista de Compras</Text>
       <FlatList
-        data={purchase}
-        keyExtractor={(item) => item.id}
+        data={purchases}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderPurchase}
         contentContainerStyle={styles.list}
       />
