@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 import { RootStackParamList } from '../../../navigation/routesParams';
-import { getCompras, getClientes } from '../../../api/api';
+import { getCompras, getClientes, deleteCompra } from '../../../api/api';
 
 interface Purchase {
   id: number;
@@ -46,6 +46,31 @@ export default function PurchaseScreen() {
     return cliente ? cliente.nome : 'Cliente não encontrado';
   };
 
+  const handleDeleteCompra = async (id: number) => {
+    Alert.alert(
+      'Confirmar Exclusão',
+      'Tem certeza de que deseja excluir esta compra?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          onPress: async () => {
+            try {
+              await deleteCompra(id); // Chama a função de exclusão
+              setPurchases((prevPurchases) => prevPurchases?.filter((purchase) => purchase.id !== id) || []);
+              Alert.alert('Sucesso', 'Compra excluída com sucesso!');
+            } catch (error) {
+              Alert.alert('Erro', 'Não foi possível excluir a compra.');
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const renderPurchase = ({ item }: { item: Purchase }) => (
     <View style={styles.card}>
       <View style={styles.info}>
@@ -62,7 +87,7 @@ export default function PurchaseScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.inactivateButton]}
-          onPress={() => Alert.alert('Excluir', 'Função de exclusão ainda não implementada')}
+          onPress={() => handleDeleteCompra(item.id)} // Chama a função de exclusão
         >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
