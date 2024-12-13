@@ -1,28 +1,92 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../navigation/routesParams';
+import { updateProduto, getProdutos } from '../../../api/api';
 
 type EditProductsModalRouteProp = RouteProp<RootStackParamList, 'EditProductsModal'>;
+
+interface Product {
+  id: number;
+  nome: string;
+  preco: string; // DECIMAL como string
+}
 
 export default function EditProductsModal() {
   const route = useRoute<EditProductsModalRouteProp>();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  
+  const { id } = route.params; // Apenas o ID do produto será passado
 
-  const { product } = route.params;
-  const [name, setName] = useState(product.name);
-  const [brand, setBrand] = useState(product.brand);
-  const [price, setPrice] = useState(product.price.toString());
-  const [quantity, setQuantity] = useState(product.quantity.toString());
-  const [status, setStatus] = useState(product.status);
+  const [name, setName] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSave = () => {
-    // Atualizar o produto no banco ou estado (a lógica pode variar)
-    console.log('Produto atualizado:', { name, brand, price, quantity, status });
-    navigation.goBack();
+  useEffect(() => {
+    // Carregar os dados do produto
+    const fetchProduct = async () => {
+      try {
+        const products: Product[] = await getProdutos(); // Pega todos os produtos
+        const product = products.find((item) => item.id === id); // Encontrar o produto pelo ID
+
+        if (product) {
+          setName(product.nome);
+          setPrice(product.preco);
+        } else {
+          setError('Produto não encontrado');
+        }
+      } catch (err) {
+        setError('Erro ao carregar os dados do produto');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const handleSave = async () => {
+    if (!name || !price) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      return;
+    }
+
+    // Validar se o preço é um número válido
+    const parsedPrice = parseFloat(price);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
+      Alert.alert('Erro', 'Por favor, insira um preço válido');
+      return;
+    }
+
+    try {
+      // Atualizar o produto no backend
+      await updateProduto(id, { nome: name, preco: parsedPrice });
+      Alert.alert('Sucesso', 'Produto atualizado com sucesso!');
+      navigation.goBack(); // Voltar para a tela anterior após salvar
+    } catch (error) {
+      console.error('Erro ao atualizar produto:', error);
+      Alert.alert('Erro', 'Não foi possível atualizar o produto');
+    }
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Carregando...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -35,23 +99,10 @@ export default function EditProductsModal() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Marca"
-        value={brand}
-        onChangeText={setBrand}
-      />
-      <TextInput
-        style={styles.input}
         placeholder="Preço"
-        keyboardType="numeric"
         value={price}
-        onChangeText={setPrice}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Quantidade"
         keyboardType="numeric"
-        value={quantity}
-        onChangeText={setQuantity}
+        onChangeText={setPrice}
       />
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>Salvar</Text>
