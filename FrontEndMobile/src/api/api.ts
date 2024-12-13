@@ -19,7 +19,7 @@ export const getClientes = async () => {
   }
 };
 
-export const createCliente = async (data: { name: string; email: string; age: number }) => {
+export const createCliente = async (data: { nome: string; email: string; idade: number }) => {
   try {
     const response = await api.post('/clientes', data);
     return response.data;

@@ -8,15 +8,9 @@ const emailExists = async (email) => {
     return rows.length > 0;
 };
 
-// Validação de idade
-const isAdult = (dataNascimento) => {
-    const idade = moment().diff(moment(dataNascimento, 'YYYY-MM-DD'), 'years');
-    return idade >= 18;
-};
-
 // Criar Cliente
 exports.createCliente = async (req, res) => {
-    const { nome, email, dataNascimento } = req.body;
+    const { nome, email, idade } = req.body;
 
     // Validação de email único
     if (await emailExists(email)) {
@@ -24,7 +18,7 @@ exports.createCliente = async (req, res) => {
     }
 
     // Validação de idade
-    if (!isAdult(dataNascimento)) {
+    if (idade <18) {
         return res.status(400).json({ message: 'Você precisa ter 18 anos ou mais' });
     }
 
@@ -38,7 +32,7 @@ exports.createCliente = async (req, res) => {
 
 // Atualizar Cliente
 exports.updateCliente = async (req, res) => {
-    const { nome, email, dataNascimento } = req.body;
+    const { nome, email, idade } = req.body;
     const clienteId = req.params.id;
 
     // Validação de email único (excluindo o próprio cliente)
@@ -47,7 +41,7 @@ exports.updateCliente = async (req, res) => {
     }
 
     // Validação de idade
-    if (!isAdult(dataNascimento)) {
+    if (idade <18) {
         return res.status(400).json({ message: 'Você precisa ter 18 anos ou mais' });
     }
 

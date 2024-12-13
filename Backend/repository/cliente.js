@@ -2,21 +2,21 @@ const pool = require('../database');  // Importa a conexão com o banco de dados
 
 // Criar Cliente
 exports.createCliente = async (data) => {
-    const { name, email, age } = data;
+    const { nome, email, idade } = data;
     // Query para inserir um novo cliente na tabela 'clientes'
-    const query = "INSERT INTO clientes (name, email, age) VALUES (?, ?, ?)";
+    const query = "INSERT INTO clientes (nome, email, idade) VALUES (?, ?, ?)";
     // Usando o método 'execute' para executar a query com os parâmetros fornecidos
-    const [result] = await pool.execute(query, [name, email, age]);
+    const [result] = await pool.execute(query, [nome, email, idade]);
     return result;  // Retorna o resultado da operação (o cliente criado)
 };
 
 // Atualizar Cliente
 exports.updateCliente = async (id, data) => {
-    const { name, email, age } = data;
+    const { nome, email, idade } = data;
     // Query para atualizar as informações de um cliente existente
-    const query = "UPDATE clientes SET name = ?, email = ?, age = ? WHERE id = ?";
+    const query = "UPDATE clientes SET nome = ?, email = ?, idade = ? WHERE id = ?";
     // Usando o método 'execute' para executar a query com os parâmetros fornecidos
-    const [result] = await pool.execute(query, [name, email, age, id]);
+    const [result] = await pool.execute(query, [nome, email, idade, id]);
     return result;  // Retorna o resultado da operação (o cliente atualizado)
 };
 
