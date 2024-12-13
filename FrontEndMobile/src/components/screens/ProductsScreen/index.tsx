@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 import { RootStackParamList } from '../../../navigation/routesParams';
-import { getProdutos } from '../../../api/api';
+import { getProdutos, deleteProduto } from '../../../api/api';
 
 interface Product {
   id: number;
   nome: string;
-  preco: string;  // Alterado para string, pois DECIMAL geralmente é representado como string
+  preco: string; // DECIMAL representado como string
 }
 
 export default function ProductsScreen() {
@@ -32,6 +32,28 @@ export default function ProductsScreen() {
     fetchProdutos();
   }, []);
 
+  const excluirProduto = async (id: number) => {
+    try {
+      await deleteProduto(id); // Chamando a API para deletar o produto
+      setProdutos((prevProdutos) => prevProdutos?.filter((produto) => produto.id !== id) || null); // Atualizando a lista local
+      Alert.alert('Sucesso', 'Produto excluído com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir produto:', error);
+      Alert.alert('Erro', 'Não foi possível excluir o produto.');
+    }
+  };
+
+  const confirmarExclusao = (id: number) => {
+    Alert.alert(
+      'Confirmação',
+      'Tem certeza que deseja excluir este produto?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', style: 'destructive', onPress: () => excluirProduto(id) },
+      ]
+    );
+  };
+
   const renderProduct = ({ item }: { item: Product }) => (
     <View style={styles.card}>
       <View style={styles.info}>
@@ -41,10 +63,14 @@ export default function ProductsScreen() {
       <View style={styles.actions}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('EditProductsModal', { id: item.id })}>
+          onPress={() => navigation.navigate('EditProductsModal', { id: item.id })}
+        >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.inactivateButton]}>
+        <TouchableOpacity
+          style={[styles.button, styles.inactivateButton]}
+          onPress={() => confirmarExclusao(item.id)}
+        >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
@@ -78,7 +104,7 @@ export default function ProductsScreen() {
       />
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('NewProductScreen')} // Navegação para a tela de novo produto
+        onPress={() => navigation.navigate('NewProductScreen')}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
