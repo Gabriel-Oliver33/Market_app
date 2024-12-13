@@ -1,33 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../navigation/routesParams'; // Importando a tipagem correta
+import { RootStackParamList } from '../../../navigation/routesParams';
+import { updateCompra, getCompras } from '../../../api/api';  // Importando as funções necessárias
 import styles from './styles';
 
-// Criando a tipagem para o uso da rota
+// Definindo o tipo para a compra (Purchase)
+interface Purchase {
+  id: number;
+  id_cliente: number;
+  data_compra: string;
+  total: string; // DECIMAL como string
+}
+
 type EditPurchaseModalRouteProp = RouteProp<RootStackParamList, 'EditPurchaseModal'>;
 
 export default function EditPurchaseModal() {
-  const route = useRoute<EditPurchaseModalRouteProp>(); // Usando a tipagem para o useRoute
+  const route = useRoute<EditPurchaseModalRouteProp>();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   
-  const { purchase } = route.params; // Acessando os parâmetros
+  const { id } = route.params; // Apenas o ID da compra será passado
 
-  const [productName, setProductName] = useState(purchase.productName);
-  const [quantity, setQuantity] = useState(purchase.quantity.toString());
-  const [totalPrice, setTotalPrice] = useState(purchase.totalPrice.toString());
-  const [date, setDate] = useState(purchase.date);
+  const [clienteId, setClienteId] = useState<number | undefined>(undefined);
+  const [total, setTotal] = useState<string>('');
 
-  const handleSave = () => {
-    // Salve as alterações aqui ou envie os dados atualizados para a API
-    console.log({
-      productName,
-      quantity: parseInt(quantity, 10),
-      totalPrice: parseFloat(totalPrice),
-      date,
-    });
-    navigation.goBack(); // Fecha a modal após salvar
+  useEffect(() => {
+    // Carregar os dados da compra específica
+    const fetchData = async () => {
+      try {
+        const purchases: Purchase[] = await getCompras(); // Definindo explicitamente o tipo
+        const selectedPurchase = purchases.find((item) => item.id === id);
+
+        if (selectedPurchase) {
+          setClienteId(selectedPurchase.id_cliente);
+          setTotal(selectedPurchase.total);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar os dados da compra', error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  const handleSave = async () => {
+    if (!clienteId || !total) {
+      alert('Por favor, preencha todos os campos');
+      return;
+    }
+
+    try {
+      // Chamando a função updateCompra passando clienteId e total
+      await updateCompra(id, { cliente_id: clienteId, total: parseFloat(total) });
+      navigation.goBack();  // Fecha a tela após a atualização
+    } catch (error) {
+      console.error('Erro ao atualizar compra:', error);
+      alert('Erro ao atualizar compra');
+    }
   };
 
   return (
@@ -36,29 +66,17 @@ export default function EditPurchaseModal() {
 
       <TextInput
         style={styles.input}
-        placeholder="Nome do Produto"
-        value={productName}
-        onChangeText={setProductName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Quantidade"
-        value={quantity}
+        placeholder="ID do Cliente"
+        value={clienteId?.toString()}
+        onChangeText={(text) => setClienteId(Number(text))}
         keyboardType="numeric"
-        onChangeText={(text) => setQuantity(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Preço Total"
-        value={totalPrice}
+        value={total}
         keyboardType="numeric"
-        onChangeText={(text) => setTotalPrice(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Data"
-        value={date}
-        onChangeText={setDate}
+        onChangeText={setTotal}
       />
 
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>

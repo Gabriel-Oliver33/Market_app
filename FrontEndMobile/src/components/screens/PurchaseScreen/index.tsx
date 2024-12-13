@@ -81,19 +81,20 @@ export default function PurchaseScreen() {
       <View style={styles.actions}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('EditPurchaseModal', { id: item.id })}
+          onPress={() => navigation.navigate('EditPurchaseModal', { id: item.id })}  // Passando apenas o id
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.inactivateButton]}
-          onPress={() => handleDeleteCompra(item.id)} // Chama a função de exclusão
+          onPress={() => handleDeleteCompra(item.id)}
         >
           <Text style={styles.buttonText}>Excluir</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+  
 
   if (loading) {
     return (

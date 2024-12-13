@@ -147,9 +147,9 @@ export const createCompra = async (data: { cliente_id: number; total: number }) 
   }
 };
 
-export const updateCompra = async (id: number, data: { cliente_id: number; produto_id: number; quantidade: number; total: number }) => {
+export const updateCompra = async (id: number, data: { cliente_id: number; total: number }) => {
   try {
-    const response = await api.put(`/compras/${id}`, data);
+    const response = await api.put(`/compras/${id}`, data);  // Passando apenas cliente_id e total
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

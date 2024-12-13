@@ -1,6 +1,3 @@
-import { Product } from '../mock/products';
-import { Purchase } from '../mock/purchase';
-
 export type RootStackParamList = {
     ClientScreen: undefined;
     NewClientScreen: undefined;

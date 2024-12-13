@@ -12,13 +12,14 @@ exports.createCompra = async (data) => {
 
 // Atualizar Compra
 exports.updateCompra = async (id, data) => {
-    const { cliente_id, produto_id, quantidade, total } = data;
+    const { cliente_id, total } = data;  // Remover produto_id e quantidade, pois não estão na tabela
     // Query para atualizar as informações de uma compra existente
-    const query = "UPDATE compras SET cliente_id = ?, produto_id = ?, quantidade = ?, total = ? WHERE id = ?";
+    const query = "UPDATE compras SET id_cliente = ?, total = ? WHERE id = ?";
     // Usando o método 'execute' para executar a query com os parâmetros fornecidos
-    const [result] = await pool.execute(query, [cliente_id, produto_id, quantidade, total, id]);
+    const [result] = await pool.execute(query, [cliente_id, total, id]);
     return result;  // Retorna o resultado da operação (a compra atualizada)
 };
+
 
 // Excluir Compra
 exports.deleteCompra = async (id) => {
