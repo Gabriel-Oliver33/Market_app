@@ -97,7 +97,7 @@ export default function PurchaseScreen() {
       />
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => console.log('Adicionar Compra')}
+        onPress={() => navigation.navigate('NewPurchaseScreen')}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>

@@ -10,6 +10,7 @@ import PuchaseScreen from '../components/screens/PurchaseScreen';
 import EditClientModal from '../components/screens/EditClientModal';
 import EditProductsModal from '../components/screens/EditProductsModal';
 import EditPurchaseModal from '../components/screens/EditPurchaseModal';
+import NewPurchaseScreen from '../components/screens/NewPurchaseScreen'
 import { RootStackParamList } from './routesParams';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -46,6 +47,11 @@ export default function AppNavigation() {
         <Stack.Screen 
           name="NewProductScreen" 
           component={NewProductScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="NewPurchaseScreen" 
+          component={NewPurchaseScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen 

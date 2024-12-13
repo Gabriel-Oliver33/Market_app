@@ -2,11 +2,11 @@ const pool = require('../database');  // Aqui você importa sua conexão com o b
 
 // Criar Compra
 exports.createCompra = async (data) => {
-    const { cliente_id, produto_id, quantidade, total } = data;
+    const { cliente_id, total } = data;  // Remova data_compra, pois é preenchido automaticamente
     // Query para inserir uma nova compra na tabela 'compras'
-    const query = "INSERT INTO compras (cliente_id, produto_id, quantidade, total) VALUES (?, ?, ?, ?)";
+    const query = "INSERT INTO compras (id_cliente, total) VALUES (?, ?)";
     // Usando o método 'execute' para executar a query com os parâmetros fornecidos
-    const [result] = await pool.execute(query, [cliente_id, produto_id, quantidade, total]);
+    const [result] = await pool.execute(query, [cliente_id, total]);  // Não precisa enviar data_compra
     return result;  // Retorna o resultado da operação (a compra criada)
 };
 
