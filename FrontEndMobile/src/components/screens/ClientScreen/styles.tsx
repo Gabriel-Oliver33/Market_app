@@ -97,5 +97,5 @@ export default StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginVertical: 8,
-},
+  },
 });
